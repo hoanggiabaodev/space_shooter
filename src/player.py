@@ -112,12 +112,11 @@ class Player(pygame.sprite.Sprite):
         GAME_LOOP_SCREEN.blit(PLAYER_DEFENSE_ICON, PLAYER_DEFENSE_ICON_POSITION)      
         GAME_LOOP_SCREEN.blit(PLAYER_DAMAGE_ICON, PLAYER_DAMAGE_ICON_POSITION)     
         GAME_LOOP_SCREEN.blit(PLAYER_KILL_ICON, PLAYER_KILL_ICON_POSITION)
-        
+        GAME_LOOP_SCREEN.blit(GAME_PAUSE_BUTTON,GAME_PAUSE_BUTTON_POSITION)
         self.draw_number(self.health, 45, 30, 0)
         self.draw_number(self.defense, SCREEN_WIDTH - 90, 15, 0)
         self.draw_number(self.damage, SCREEN_WIDTH - 90, 50, 0)
         self.draw_number(self.score, SCREEN_WIDTH - 90, 85, 0)
-            
     def shoot(self):
         now = pygame.time.get_ticks()
         if self.type == NORMAL_TYPE:

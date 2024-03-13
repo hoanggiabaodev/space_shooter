@@ -7,12 +7,13 @@ from constants.screen import GAME_PLAY_BUTTON, GAME_PLAY_BUTTON_X, GAME_PLAY_BUT
 from constants.screen import GAME_REPLAY_BUTTON, GAME_REPLAY_BUTTON_X, GAME_REPLAY_BUTTON_Y
 from constants.screen import GAME_REPLAY_BUTTON, GAME_REPLAY_BUTTON_X, GAME_REPLAY_BUTTON_Y
 from constants.screen import GAME_EXIT_BUTTON, GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y
+from constants.screen import GAME_CONTINUE_BUTTON,GAME_CONTINUE_BUTTON_X,GAME_CONTINUE_BUTTON_Y
 from constants.screen import START_IMAGE, START_IMAGE_X, START_IMAGE_Y
 from constants.screen import STOP_IMAGE, STOP_IMAGE_X, STOP_IMAGE_Y
 from constants.bullet_player import PLAYER_BULLET_LIST
 from constants.bullet_enemy import ENEMY_LEVEL_1_BULLET_LIST, ENEMY_LEVEL_2_BULLET_LIST, ENEMY_LEVEL_3_BULLET_LIST, ENEMY_LEVEL_4_BULLET_LIST, ENEMY_LEVEL_5_BULLET_LIST
 from constants.enemy import ENEMY_LIST, ENEMY_GENETATE_DELAY
-from constants.player import PLAYER_LIST
+from constants.player import PLAYER_LIST,BUTTON_HEIGHT_OF_PAUSE,BUTTON_WIDTH_OF_PAUSE,BUTTON_POSITION_WIDTH,BUTTON_POSITION_HEIGHT
 from constants.item import ITEM_LIST
 from src.player import Player
 from src.enemy import Enemy
@@ -65,12 +66,13 @@ def game_stop_loop():
                     game_loop()
                 elif pygame.Rect(GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
                     sys.exit()
+                
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     game_loop()
                     
         pygame.display.update()
-        
+
 
 # ================================ Game Loop ================================
 def game_loop():
@@ -78,64 +80,79 @@ def game_loop():
     PLAYER_LIST.add(player)
     game_over = False
     SKIN_ANGLE = 0
+    game_pause = False
     enemy_spawn_time = 0.0 
     GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play(-1)
     GAME_LOOP_SCREEN_BACKGROUND_Y = 0
     enemy_bullet_list = [ENEMY_LEVEL_1_BULLET_LIST, ENEMY_LEVEL_2_BULLET_LIST, ENEMY_LEVEL_3_BULLET_LIST, ENEMY_LEVEL_4_BULLET_LIST, ENEMY_LEVEL_5_BULLET_LIST]
     while not game_over:
-        clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
-                sys.exit()
-        
-        # ====================================== SCREEN ====================================== 
-        GAME_LOOP_SCREEN_BACKGROUND_Y += GAME_LOOP_SCREEN_BACKGROUND_SPEED
-        if GAME_LOOP_SCREEN_BACKGROUND_Y >= 0:
-            GAME_LOOP_SCREEN_BACKGROUND_Y = -SCREEN_HEIGHT
-        GAME_LOOP_SCREEN.blit(GAME_LOOP_SCREEN_BACKGROUND, (0, GAME_LOOP_SCREEN_BACKGROUND_Y))
-        GAME_LOOP_SCREEN.blit(GAME_LOOP_SCREEN_BACKGROUND, (0, GAME_LOOP_SCREEN_BACKGROUND_Y + SCREEN_HEIGHT))   
-                    
-        # ====================================== ENEMY ====================================== #
-        enemy_spawn_time += 1/FPS
-        
-        if enemy_spawn_time >= ENEMY_GENETATE_DELAY:
-            Enemy.generate_enemies() 
-            enemy_spawn_time = 0.0  
+                sys.exit()   
+            elif event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                if pygame.Rect(BUTTON_POSITION_WIDTH,BUTTON_POSITION_HEIGHT, BUTTON_WIDTH_OF_PAUSE, BUTTON_HEIGHT_OF_PAUSE).collidepoint(pos):
+                    game_pause = not False
+                elif pygame.Rect(GAME_CONTINUE_BUTTON_X,GAME_CONTINUE_BUTTON_Y - (SCREEN_HEIGHT // 3),BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
+                        game_pause = False
+        if(game_pause):
+            GAME_LOOP_SCREEN.blit(GAME_CONTINUE_BUTTON,(GAME_CONTINUE_BUTTON_X,GAME_CONTINUE_BUTTON_Y - (SCREEN_HEIGHT // 3)))
+            pygame.display.update()
+            # Đặt âm lượng của nhạc nền thành rất nhỏ
+            GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(0.01)
+
             
-        for enemy in ENEMY_LIST:
-            enemy.update()
+        else:
+            # Khôi phục lại âm lượng khi tiếp tục trò chơi
+            GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(1)
+            clock.tick(FPS)
+            # ====================================== SCREEN ====================================== 
+            GAME_LOOP_SCREEN_BACKGROUND_Y += GAME_LOOP_SCREEN_BACKGROUND_SPEED
+            if GAME_LOOP_SCREEN_BACKGROUND_Y >= 0:
+                GAME_LOOP_SCREEN_BACKGROUND_Y = -SCREEN_HEIGHT
+            GAME_LOOP_SCREEN.blit(GAME_LOOP_SCREEN_BACKGROUND, (0, GAME_LOOP_SCREEN_BACKGROUND_Y))
+            GAME_LOOP_SCREEN.blit(GAME_LOOP_SCREEN_BACKGROUND, (0, GAME_LOOP_SCREEN_BACKGROUND_Y + SCREEN_HEIGHT))  
+            # ====================================== ENEMY ====================================== #
+            enemy_spawn_time += 1/FPS
             
-        # ====================================== PLAYER ====================================== #
-        SKIN_ANGLE += 1
-        if SKIN_ANGLE >= 360:
-            SKIN_ANGLE = 0
-        
-        player.update(SKIN_ANGLE)
-        
-        # ====================================== ENEMY BULLET ====================================== #
-        for bullet in PLAYER_BULLET_LIST:
-            for enemy in ENEMY_LIST: 
-                enemy.enemy_hit(bullet, player)
-        
-        for bullet_list in enemy_bullet_list:
-            for bullet in bullet_list:
-                bullet.update()
-                player.player_hit(bullet)
-            
-        # ====================================== PLAYER BULLET ====================================== #
-        for bullet in PLAYER_BULLET_LIST:
-            bullet.update(player)
-            
-        # ====================================== ITEM ====================================== #
-        for item in ITEM_LIST:
-            item.update()
-            player.get_item(item)
+            if enemy_spawn_time >= ENEMY_GENETATE_DELAY:
+                Enemy.generate_enemies() 
+                enemy_spawn_time = 0.0  
                 
-        pygame.display.update()
-        
-        if len(PLAYER_LIST) == 0:
-            game_over = True
+            for enemy in ENEMY_LIST:
+                enemy.update()
+                
+            # ====================================== PLAYER ====================================== #
+            SKIN_ANGLE += 1
+            if SKIN_ANGLE >= 360:
+                SKIN_ANGLE = 0
+            
+            player.update(SKIN_ANGLE)
+            
+            # ====================================== ENEMY BULLET ====================================== #
+            for bullet in PLAYER_BULLET_LIST:
+                for enemy in ENEMY_LIST: 
+                    enemy.enemy_hit(bullet, player)
+            
+            for bullet_list in enemy_bullet_list:
+                for bullet in bullet_list:
+                    bullet.update()
+                    player.player_hit(bullet)
+                
+            # ====================================== PLAYER BULLET ====================================== #
+            for bullet in PLAYER_BULLET_LIST:
+                bullet.update(player)
+                
+            # ====================================== ITEM ====================================== #
+            for item in ITEM_LIST:
+                item.update()
+                player.get_item(item)
+                    
+            pygame.display.update()
+            
+            if len(PLAYER_LIST) == 0:
+                game_over = True
             
     if game_over:
         game_stop_loop()

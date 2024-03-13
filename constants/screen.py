@@ -8,6 +8,7 @@ SCREEN_HEIGHT = 650
 BUTTON_WIDTH = 180
 BUTTON_HEIGHT = 53
 
+
 ###### Setup màn hình và ảnh, nhạc nền cho Game Loop Screen:
 GAME_LOOP_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 GAME_LOOP_SCREEN_BACKGROUND = pygame.transform.scale(pygame.image.load("resources/images/Game_Loop_Background.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -22,6 +23,8 @@ GAME_START_SCREEN_BACKGROUND = pygame.transform.scale(pygame.image.load("resourc
 GAME_STOP_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 GAME_STOP_SCREEN_BACKGROUND = pygame.transform.scale(pygame.image.load("resources/images/Game_Stop_Background.png"), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
+###### Setup màn hình và ảnh nền cho Game Pause:
+
 GAME_PLAY_BUTTON = pygame.transform.scale(pygame.image.load("resources/images/Game_Play_Button.png"),  (BUTTON_WIDTH, BUTTON_HEIGHT))
 GAME_REPLAY_BUTTON = pygame.transform.scale(pygame.image.load("resources/images/Game_Replay_Button.png"),  (BUTTON_WIDTH, BUTTON_HEIGHT))
 GAME_CONTINUE_BUTTON = pygame.transform.scale(pygame.image.load("resources/images/Game_Continue_Button.png"),  (BUTTON_WIDTH, BUTTON_HEIGHT))
@@ -35,6 +38,7 @@ GAME_CONTINUE_BUTTON_X = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
 GAME_CONTINUE_BUTTON_Y = SCREEN_HEIGHT - 150
 GAME_EXIT_BUTTON_X = (SCREEN_WIDTH - BUTTON_WIDTH) // 2
 GAME_EXIT_BUTTON_Y = SCREEN_HEIGHT - 150
+
 
 START_IMAGE_WIDTH = 400
 START_IMAGE_HEIGHT = 400

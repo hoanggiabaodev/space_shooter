@@ -30,6 +30,7 @@ PLAYER_SPREAD_HIT_BOX_IMAGE = pygame.transform.scale(pygame.image.load("resource
 PLAYER_AROUND_HIT_BOX_IMAGE = pygame.transform.scale(pygame.image.load("resources/images/Player_Around_Hit_Box.png"), (PLAYER_HIT_BOX_WIDTH, PLAYER_HIT_BOX_HEIGHT))
 PLAYER_LASER_HIT_BOX_IMAGE = pygame.transform.scale(pygame.image.load("resources/images/Player_Laser_Hit_Box.png"), (PLAYER_HIT_BOX_WIDTH, PLAYER_HIT_BOX_HEIGHT))
 
+
 ###### Setup kích thước và hình ảnh skin của Player:
 
 PLAYER_SPECIAL_SKIN_1_WIDTH = 120
@@ -113,6 +114,14 @@ PLAYER_KILL_ICON_WIDTH = 28
 PLAYER_KILL_ICON_HEIGHT = 24
 PLAYER_KILL_ICON_POSITION = (SCREEN_WIDTH - PLAYER_HEALTH_ICON_WIDTH - 10, 80)
 PLAYER_KILL_ICON = pygame.transform.scale(pygame.image.load("resources/images/Player_Kill_Icon.png"), (PLAYER_KILL_ICON_WIDTH, PLAYER_KILL_ICON_HEIGHT))
+
+###### Setup kích thước và hình ảnh button pause:
+BUTTON_WIDTH_OF_PAUSE = 50
+BUTTON_HEIGHT_OF_PAUSE = 50
+BUTTON_POSITION_WIDTH = SCREEN_WIDTH - PLAYER_HEALTH_ICON_WIDTH - 20
+BUTTON_POSITION_HEIGHT = 115
+GAME_PAUSE_BUTTON_POSITION = (BUTTON_POSITION_WIDTH,BUTTON_POSITION_HEIGHT)
+GAME_PAUSE_BUTTON = pygame.transform.scale(pygame.image.load("resources/images/Game_Pause_Button.png"),(BUTTON_WIDTH_OF_PAUSE,BUTTON_HEIGHT_OF_PAUSE)) 
 
 PLAYER_EXPLOSION_EFFECT = gif_pygame.load("resources/images/Player_Explosion_Effect.gif")
 PLAYER_DEATH_EFFECT = gif_pygame.load("resources/images/Player_Kill_Effect.gif")
