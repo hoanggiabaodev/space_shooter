@@ -32,25 +32,27 @@ class Player(pygame.sprite.Sprite):
         self.death_time = None
         self.transform_start_time = None
         self.transform_duration = None
+        self.game_over = False
         
     def move(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed_x
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed_x
-        if keys[pygame.K_UP]:
-            self.rect.y -= self.speed_y
-        if keys[pygame.K_DOWN]:
-            self.rect.y += self.speed_y
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.right > SCREEN_WIDTH:
-            self.rect.right = SCREEN_WIDTH
-        if self.rect.top < 0:
-            self.rect.top = 0
-        if self.rect.bottom > SCREEN_HEIGHT:
-            self.rect.bottom = SCREEN_HEIGHT
+        if not self.game_over:  
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT]:
+                self.rect.x -= self.speed_x
+            if keys[pygame.K_RIGHT]:
+                self.rect.x += self.speed_x
+            if keys[pygame.K_UP]:
+                self.rect.y -= self.speed_y
+            if keys[pygame.K_DOWN]:
+                self.rect.y += self.speed_y
+            if self.rect.left < 0:
+                self.rect.left = 0
+            if self.rect.right > SCREEN_WIDTH:
+                self.rect.right = SCREEN_WIDTH
+            if self.rect.top < 0:
+                self.rect.top = 0
+            if self.rect.bottom > SCREEN_HEIGHT:
+                self.rect.bottom = SCREEN_HEIGHT
     
     def draw(self, angle):
         if self.type == NORMAL_TYPE:
@@ -212,6 +214,8 @@ class Player(pygame.sprite.Sprite):
                     self.health -= actual_damage
                     if self.health <= 0:
                         self.death_time = pygame.time.get_ticks()
+                        self.game_over = True  
+
                         
         if self.explosion_time is not None:
             current_time = pygame.time.get_ticks()
@@ -265,16 +269,3 @@ class Player(pygame.sprite.Sprite):
                 if elapsed_time >= self.transform_duration:
                     self.type = NORMAL_TYPE
                     self.transform_start_time = None
-            
-            
-        
-
-
-
-
-
-
-
-
-
-          
