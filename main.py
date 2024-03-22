@@ -29,11 +29,13 @@ from constants.screen import IMG_ITEMS_SOUND,ITEMS_SOUND_X,ITEMS_SOUND_Y
 from constants.screen import IMG_ITEMS_SL_ONE,ITEMS_SOUND_ONE_X,ITEMS_SOUND_ONE_Y
 from constants.screen import IMG_ITEMS_SL_TWO,ITEMS_SOUND_TWO_X,ITEMS_SOUND_TWO_Y
 from constants.screen import IMG_ITEMS_SL_THREE,ITEMS_SOUND_THREE_X,ITEMS_SOUND_THREE_Y
-from constants.screen import IMG_TRACK,TRACK_X,TRACK_Y
-from constants.screen import IMG_THUMB,THUMB_X,THUMB_Y
+from constants.screen import IMG_TRACK,TRACK_X,TRACK_Y,TRACK_WIDTH,TRACK_HEIGHT
+from constants.screen import IMG_THUMB,THUMB_X,THUMB_Y,THUMB_WIDTH,THUMB_HEIGHT
 from constants.screen import START_IMAGE, START_IMAGE_X, START_IMAGE_Y
 from constants.screen import STOP_IMAGE, STOP_IMAGE_X, STOP_IMAGE_Y
-from constants.bullet_player import PLAYER_BULLET_LIST
+from constants.screen import EFFECT_SOUND_HIT_X,EFFECT_SOUND_HIT_Y,EFFECT_SOUND_ONE_X,EFFECT_SOUND_ONE_Y,EFFECT_SOUND_TWO_X,EFFECT_SOUND_TWO_Y,EFFECT_SOUND_THREE_X,EFFECT_SOUND_THREE_Y
+from constants.screen import TRACK_EFFECT_X,TRACK_EFFECT_Y,THUMB_EFFECT_X,THUMB_EFFECT_Y
+from constants.bullet_player import PLAYER_BULLET_LIST,HIT_VOLUME
 from constants.bullet_enemy import (
     ENEMY_LEVEL_1_BULLET_LIST,
     ENEMY_LEVEL_2_BULLET_LIST,
@@ -52,11 +54,13 @@ from constants.player import (
 from constants.item import ITEM_LIST
 from src.player import Player
 from src.enemy import Enemy
-
+from constants.screen import BACKGROUND_MUSIC_VOLUME
+from constants.bullet_player import PLAYER_BULLET_NORMAL_SOUND,PLAYER_BULLET_SPECIAL_SOUND,PLAYER_BULLET_SPREAD_SOUND,PLAYER_BULLET_AROUND_SOUND,PLAYER_BULLET_LASER_SOUND
 
 # ================================ Game Start Loop ================================
 
 def game_start_loop():
+    GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play()
     while True:
         GAME_START_SCREEN.blit(GAME_START_SCREEN_BACKGROUND, (0, 0))
         GAME_START_SCREEN.blit(START_IMAGE, (START_IMAGE_X, START_IMAGE_Y))
@@ -142,21 +146,165 @@ def Game_pause():
                 pos = pygame.mouse.get_pos()
                 if pygame.Rect(GAME_BACK_BUTTON_X,GAME_BACK_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
                     game_loop()
+                    return
                 elif pygame.Rect(GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
                     sys.exit()
                 elif pygame.Rect(GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
                     game_select()
         pygame.display.update()
 # ================================ Game Select ================================
-def game_select ():
+
+def game_select():
+    dragging = False
+    dragging_effect = False
+    global THUMB_X
+    global BACKGROUND_MUSIC_VOLUME
+    global HIT_VOLUME
+    
+    # Vẽ lại track và thumb dựa trên BACKGROUND_MUSIC_VOLUME ban đầu
+    TRACK_NEW_WIDTH = int(TRACK_WIDTH * BACKGROUND_MUSIC_VOLUME)
+    TRACK_RECT = pygame.Rect(0, 0, TRACK_NEW_WIDTH, TRACK_HEIGHT)
+    THUMB_X = TRACK_X + TRACK_NEW_WIDTH - THUMB_WIDTH // 2
+    # Vẽ lại track và thumb dựa trên HIT_VOLUME ban đầu
+    TRACK_NEW_EFF_WIDTH = int(TRACK_WIDTH * HIT_VOLUME)
+    TRACK_RECT_ = pygame.Rect(0,0,TRACK_NEW_EFF_WIDTH,TRACK_HEIGHT)
+    THUMB_EFFECT_X = TRACK_EFFECT_X + TRACK_NEW_EFF_WIDTH - THUMB_WIDTH // 2
+
+    # tạo chuỗi hiển thị số của âm lượng
+    font = pygame.font.Font(None, 23)  # Khởi tạo font với kích thước 23
+
+    
+    # Màu sắc của văn bản (ví dụ: màu trắng)
+    color = (255, 255, 255)
+
+    # Tạo chữ âm lượng nhạc nền
+    text_vari_ = "Soundtrack"
+    text_surface_ = font.render(text_vari_, True, color)
+    text_rect_ = text_surface_.get_rect()
+    text_rect_.x = ITEMS_SOUND_X # Đặt văn bản ở tọa độ x 
+    text_rect_.y = ITEMS_SOUND_Y - 40  # Đặt văn bản ở tọa độ y
+
+
+    # Tạo chữ âm lượng hiệu ứng
+    text_vari__ = "Soundeffect"
+    text_surface__ = font.render(text_vari__,True,color)
+    text_rect__ = text_surface__.get_rect()
+    text_rect__.x = EFFECT_SOUND_HIT_X
+    text_rect__.y = EFFECT_SOUND_HIT_Y - 40
+
     while True:
         GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0,0))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SOUND,(ITEMS_SOUND_X,ITEMS_SOUND_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE,(ITEMS_SOUND_ONE_X,ITEMS_SOUND_ONE_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO,(ITEMS_SOUND_TWO_X,ITEMS_SOUND_TWO_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_THREE,(ITEMS_SOUND_THREE_X,ITEMS_SOUND_THREE_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_TRACK,(TRACK_X,TRACK_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_THUMB,(THUMB_X,THUMB_Y))
+        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SOUND, (ITEMS_SOUND_X, ITEMS_SOUND_Y))
+        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SOUND,(EFFECT_SOUND_HIT_X,EFFECT_SOUND_HIT_Y))
+        GAME_LOOP_SCREEN.blit(text_surface_,text_rect_)
+        GAME_LOOP_SCREEN.blit(text_surface__,text_rect__)
+        
+        if BACKGROUND_MUSIC_VOLUME >= 0.75:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (ITEMS_SOUND_ONE_X, ITEMS_SOUND_ONE_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO, (ITEMS_SOUND_TWO_X, ITEMS_SOUND_TWO_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_THREE, (ITEMS_SOUND_THREE_X, ITEMS_SOUND_THREE_Y))
+        elif 0.5 <= BACKGROUND_MUSIC_VOLUME < 0.75:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (ITEMS_SOUND_ONE_X, ITEMS_SOUND_ONE_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO, (ITEMS_SOUND_TWO_X, ITEMS_SOUND_TWO_Y))
+        elif 0 < BACKGROUND_MUSIC_VOLUME < 0.5:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (ITEMS_SOUND_ONE_X, ITEMS_SOUND_ONE_Y))
+        # Không vẽ gì nếu HIT_VOLUME < 0.25
+            
+        if HIT_VOLUME >= 0.75:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (EFFECT_SOUND_ONE_X,EFFECT_SOUND_ONE_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO, (EFFECT_SOUND_TWO_X, EFFECT_SOUND_TWO_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_THREE, (EFFECT_SOUND_THREE_X, EFFECT_SOUND_THREE_Y))
+        elif 0.5 <= HIT_VOLUME < 0.75:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (EFFECT_SOUND_ONE_X, EFFECT_SOUND_ONE_Y))
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO, (EFFECT_SOUND_TWO_X, EFFECT_SOUND_TWO_Y))
+        elif 0 < HIT_VOLUME < 0.5:
+            GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE, (EFFECT_SOUND_ONE_X, EFFECT_SOUND_ONE_Y))
+            
+        GAME_PAUSE_SCREEN.blit(GAME_BACK_BUTTON,(GAME_BACK_BUTTON_X  ,GAME_BACK_BUTTON_Y + 100))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                if pygame.Rect(GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y + 100, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
+                    Game_pause()
+                    return
+                if pygame.Rect(THUMB_X, THUMB_Y, THUMB_WIDTH, THUMB_HEIGHT).collidepoint(pos):
+                    dragging = True
+                if pygame.Rect(THUMB_EFFECT_X, THUMB_EFFECT_Y, THUMB_WIDTH, THUMB_HEIGHT).collidepoint(pos):
+                    dragging_effect = True  # Bắt đầu kéo trượt TRACK_EFFECT
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    dragging = False
+                    dragging_effect = False
+            elif event.type == pygame.MOUSEMOTION:
+                if dragging:
+                    pos = pygame.mouse.get_pos()
+                    # Giới hạn vị trí mới của thumb trong phạm vi của track
+                    new_thumb_x = pos[0]
+                    if new_thumb_x < TRACK_X:
+                        new_thumb_x = TRACK_X - THUMB_WIDTH // 2
+                    elif new_thumb_x > TRACK_X + TRACK_WIDTH - THUMB_WIDTH // 2:
+                        new_thumb_x = TRACK_X + TRACK_WIDTH - THUMB_WIDTH // 2
+                    THUMB_X = new_thumb_x 
+                    
+                    # Tính toán lại giá trị của HIT_VOLUME
+                    BACKGROUND_MUSIC_VOLUME = (THUMB_X - TRACK_X + THUMB_WIDTH // 2) / TRACK_WIDTH
+                    
+                    # Tính toán lại kích thước mới của TRACK và TRACK_RECT
+                    TRACK_NEW_WIDTH = int(TRACK_WIDTH * BACKGROUND_MUSIC_VOLUME)
+                    TRACK_RECT = pygame.Rect(0, 0, TRACK_NEW_WIDTH, TRACK_HEIGHT)
+                if dragging_effect:
+                    pos = pygame.mouse.get_pos()
+                    new_thumb_x = pos[0]
+                    if new_thumb_x < TRACK_EFFECT_X:
+                        new_thumb_x = TRACK_EFFECT_X - THUMB_WIDTH // 2
+                    elif new_thumb_x > TRACK_EFFECT_X + TRACK_WIDTH - THUMB_WIDTH // 2:
+                        new_thumb_x = TRACK_EFFECT_X + TRACK_WIDTH - THUMB_WIDTH // 2
+                    
+                    THUMB_EFFECT_X = new_thumb_x 
+                    HIT_VOLUME = (THUMB_EFFECT_X - TRACK_EFFECT_X + THUMB_WIDTH // 2) / TRACK_WIDTH
+                    TRACK_NEW_EFF_WIDTH = int(TRACK_WIDTH * HIT_VOLUME)
+                    TRACK_RECT_ = pygame.Rect(0, 0,TRACK_NEW_EFF_WIDTH,TRACK_HEIGHT)
+                    
+        
+        text_variable = str(int(BACKGROUND_MUSIC_VOLUME * 100))
+        # Vẽ văn bản lên màn hình
+        text_surface = font.render(text_variable, True, color)
+
+        # Vị trí của văn bản trên màn hình
+        text_rect = text_surface.get_rect()
+        text_rect.x = TRACK_X + TRACK_WIDTH + THUMB_WIDTH + 10  # Đặt văn bản ở tọa độ x 
+        text_rect.y = THUMB_Y  # Đặt văn bản ở tọa độ y
+        GAME_LOOP_SCREEN.blit(text_surface,text_rect)
+        # đặt lại âm lương của nhạc nền và hiệu ứng
+        GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(BACKGROUND_MUSIC_VOLUME)
+
+
+        text_variable_ = str(int(HIT_VOLUME * 100))
+        text_surface___ = font.render(text_variable_,True,color)
+        text_rect___ = text_surface___.get_rect()
+        text_rect___.x = TRACK_EFFECT_X + TRACK_WIDTH + THUMB_WIDTH + 10
+        text_rect___.y = THUMB_EFFECT_Y
+        GAME_LOOP_SCREEN.blit(text_surface___,text_rect___)
+
+        PLAYER_BULLET_NORMAL_SOUND.set_volume(HIT_VOLUME)
+        PLAYER_BULLET_SPECIAL_SOUND.set_volume(HIT_VOLUME)
+        PLAYER_BULLET_SPREAD_SOUND.set_volume(HIT_VOLUME)
+        PLAYER_BULLET_AROUND_SOUND.set_volume(HIT_VOLUME)
+        PLAYER_BULLET_LASER_SOUND.set_volume(HIT_VOLUME)
+        # Vẽ lại toàn bộ IMG_TRACK, nhưng chỉ hiển thị phần tương ứng với TRACK_RECT
+        GAME_PAUSE_SCREEN.blit(IMG_TRACK, (TRACK_X, TRACK_Y), TRACK_RECT)
+        # Vẽ lại IMG_THUMB
+        GAME_PAUSE_SCREEN.blit(IMG_THUMB, (THUMB_X, THUMB_Y))
+        
+        GAME_PAUSE_SCREEN.blit(IMG_TRACK,(TRACK_EFFECT_X,TRACK_EFFECT_Y),TRACK_RECT_)
+
+        GAME_PAUSE_SCREEN.blit(IMG_THUMB,(THUMB_EFFECT_X,THUMB_EFFECT_Y))
+        
         pygame.display.update()
 
 # ================================ Game Loop ================================
@@ -167,7 +315,7 @@ def game_loop():
     SKIN_ANGLE = 0
     game_pause = False
     enemy_spawn_time = 0.0 
-    # GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play(-1)
+    
     GAME_LOOP_SCREEN_BACKGROUND_Y = 0
     enemy_bullet_list = [
         ENEMY_LEVEL_1_BULLET_LIST,
@@ -194,14 +342,10 @@ def game_loop():
                         game_pause = False
         if(game_pause):
             Game_pause()
-            # Đặt âm lượng của nhạc nền thành rất nhỏ
-            # GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(0.01)
 
         else:
-            # Khôi phục lại âm lượng khi tiếp tục trò chơi
-            # GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(1)
             clock.tick(FPS)
-            # ====================================== SCREEN ======================================
+            # ====================================== SCREEN ====================================== 
             GAME_LOOP_SCREEN_BACKGROUND_Y += GAME_LOOP_SCREEN_BACKGROUND_SPEED
             if GAME_LOOP_SCREEN_BACKGROUND_Y >= 0:
                 GAME_LOOP_SCREEN_BACKGROUND_Y = -SCREEN_HEIGHT
