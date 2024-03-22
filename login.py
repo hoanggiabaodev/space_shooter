@@ -7,7 +7,6 @@ import user_database
 import re
 
 
-
 def register():
     username = entry_username.get()
     password = entry_password.get()
@@ -43,6 +42,8 @@ def login():
         current_user_info = user_database.get_user_info(username)
 
         # Import module main và chạy giao diện game ở đây
+        import main   
+        main.current_username = username
         from main import game_start_loop
         game_start_loop()
 

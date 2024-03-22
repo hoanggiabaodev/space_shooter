@@ -6,6 +6,9 @@ from constants.setup import LASER_TYPE
 from constants.item import ITEM_FREQUENCY_RATE
 from src.bullet_enemy import BulletEnemy
 from src.item import Item
+import sys
+sys.path.append('./database')
+import user_database
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
@@ -199,3 +202,13 @@ class Enemy(pygame.sprite.Sprite):
             enemy.explosion_effect = ENEMY_LEVEL_5_EXPLOSION_EFFECT
         enemy.rect = enemy.image.get_rect()
         ENEMY_LIST.add(enemy)
+
+    def save_highscore(username, score):
+        user_info = user_database.get_user_info(username)
+        if user_info:
+            current_highscore = user_info[3]  # highscore là cột thứ tư trong cơ sở dữ liệu
+            if score > current_highscore:
+                user_database.update_highest_score(username, score)
+        else:
+            # Nếu người chơi không tồn tại trong cơ sở dữ liệu, thêm người chơi mới với highscore là điểm hiện tại
+            user_database.register_user(username, "", score)

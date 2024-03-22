@@ -8,7 +8,7 @@ from constants.screen import (
 )
 from constants.screen import GAME_START_SCREEN, GAME_START_SCREEN_BACKGROUND
 from constants.screen import GAME_STOP_SCREEN, GAME_STOP_SCREEN_BACKGROUND
-from constants.screen import GAME_PAUSE_SCREEN,GAME_PAUSE_SCREEN_BACKGROUND
+from constants.screen import GAME_PAUSE_SCREEN, GAME_PAUSE_SCREEN_BACKGROUND
 from constants.screen import BUTTON_WIDTH, BUTTON_HEIGHT
 from constants.screen import GAME_PLAY_BUTTON, GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y
 from constants.screen import (
@@ -22,15 +22,15 @@ from constants.screen import (
     GAME_REPLAY_BUTTON_Y,
 )
 from constants.screen import GAME_EXIT_BUTTON, GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y
-from constants.screen import GAME_CONTINUE_BUTTON_X,GAME_CONTINUE_BUTTON_Y
-from constants.screen import GAME_BACK_BUTTON,GAME_BACK_BUTTON_X,GAME_BACK_BUTTON_Y
-from constants.screen import GAME_SELECT_BUTTON,GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y
-from constants.screen import IMG_ITEMS_SOUND,ITEMS_SOUND_X,ITEMS_SOUND_Y
-from constants.screen import IMG_ITEMS_SL_ONE,ITEMS_SOUND_ONE_X,ITEMS_SOUND_ONE_Y
-from constants.screen import IMG_ITEMS_SL_TWO,ITEMS_SOUND_TWO_X,ITEMS_SOUND_TWO_Y
-from constants.screen import IMG_ITEMS_SL_THREE,ITEMS_SOUND_THREE_X,ITEMS_SOUND_THREE_Y
-from constants.screen import IMG_TRACK,TRACK_X,TRACK_Y
-from constants.screen import IMG_THUMB,THUMB_X,THUMB_Y
+from constants.screen import GAME_CONTINUE_BUTTON_X, GAME_CONTINUE_BUTTON_Y
+from constants.screen import GAME_BACK_BUTTON, GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y
+from constants.screen import GAME_SELECT_BUTTON, GAME_SELECT_BUTTON_X, GAME_SELECT_BUTTON_Y
+from constants.screen import IMG_ITEMS_SOUND, ITEMS_SOUND_X, ITEMS_SOUND_Y
+from constants.screen import IMG_ITEMS_SL_ONE, ITEMS_SOUND_ONE_X, ITEMS_SOUND_ONE_Y
+from constants.screen import IMG_ITEMS_SL_TWO, ITEMS_SOUND_TWO_X, ITEMS_SOUND_TWO_Y
+from constants.screen import IMG_ITEMS_SL_THREE, ITEMS_SOUND_THREE_X, ITEMS_SOUND_THREE_Y
+from constants.screen import IMG_TRACK, TRACK_X, TRACK_Y
+from constants.screen import IMG_THUMB, THUMB_X, THUMB_Y
 from constants.screen import START_IMAGE, START_IMAGE_X, START_IMAGE_Y
 from constants.screen import STOP_IMAGE, STOP_IMAGE_X, STOP_IMAGE_Y
 from constants.bullet_player import PLAYER_BULLET_LIST
@@ -53,8 +53,10 @@ from constants.item import ITEM_LIST
 from src.player import Player
 from src.enemy import Enemy
 
+current_username = None
 
 # ================================ Game Start Loop ================================
+
 
 def game_start_loop():
     while True:
@@ -86,7 +88,7 @@ def game_start_loop():
 
 
 # ================================ Game Stop Loop ================================
-def game_stop_loop():
+def game_stop_loop(player):
     PLAYER_LIST.empty()
     PLAYER_BULLET_LIST.empty()
     ENEMY_LIST.empty()
@@ -126,47 +128,60 @@ def game_stop_loop():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     game_loop()
+        Enemy.save_highscore(username=current_username, score=player.score)
 
         pygame.display.update()
 # ================================ Game Pause ===============================
+
+
 def Game_pause():
     while True:
-        GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0,0))
-        GAME_PAUSE_SCREEN.blit(GAME_BACK_BUTTON,(GAME_BACK_BUTTON_X,GAME_BACK_BUTTON_Y))
-        GAME_PAUSE_SCREEN.blit(GAME_SELECT_BUTTON,(GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y))
-        GAME_PAUSE_SCREEN.blit(GAME_EXIT_BUTTON,(GAME_EXIT_BUTTON_X,GAME_EXIT_BUTTON_Y))
+        GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0, 0))
+        GAME_PAUSE_SCREEN.blit(
+            GAME_BACK_BUTTON, (GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y))
+        GAME_PAUSE_SCREEN.blit(
+            GAME_SELECT_BUTTON, (GAME_SELECT_BUTTON_X, GAME_SELECT_BUTTON_Y))
+        GAME_PAUSE_SCREEN.blit(
+            GAME_EXIT_BUTTON, (GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
-                if pygame.Rect(GAME_BACK_BUTTON_X,GAME_BACK_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
+                if pygame.Rect(GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
                     game_loop()
                 elif pygame.Rect(GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
                     sys.exit()
-                elif pygame.Rect(GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
+                elif pygame.Rect(GAME_SELECT_BUTTON_X, GAME_SELECT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
                     game_select()
         pygame.display.update()
 # ================================ Game Select ================================
-def game_select ():
+
+
+def game_select():
     while True:
-        GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0,0))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SOUND,(ITEMS_SOUND_X,ITEMS_SOUND_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_ONE,(ITEMS_SOUND_ONE_X,ITEMS_SOUND_ONE_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_TWO,(ITEMS_SOUND_TWO_X,ITEMS_SOUND_TWO_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SL_THREE,(ITEMS_SOUND_THREE_X,ITEMS_SOUND_THREE_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_TRACK,(TRACK_X,TRACK_Y))
-        GAME_PAUSE_SCREEN.blit(IMG_THUMB,(THUMB_X,THUMB_Y))
+        GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0, 0))
+        GAME_PAUSE_SCREEN.blit(IMG_ITEMS_SOUND, (ITEMS_SOUND_X, ITEMS_SOUND_Y))
+        GAME_PAUSE_SCREEN.blit(
+            IMG_ITEMS_SL_ONE, (ITEMS_SOUND_ONE_X, ITEMS_SOUND_ONE_Y))
+        GAME_PAUSE_SCREEN.blit(
+            IMG_ITEMS_SL_TWO, (ITEMS_SOUND_TWO_X, ITEMS_SOUND_TWO_Y))
+        GAME_PAUSE_SCREEN.blit(
+            IMG_ITEMS_SL_THREE, (ITEMS_SOUND_THREE_X, ITEMS_SOUND_THREE_Y))
+        GAME_PAUSE_SCREEN.blit(IMG_TRACK, (TRACK_X, TRACK_Y))
+        GAME_PAUSE_SCREEN.blit(IMG_THUMB, (THUMB_X, THUMB_Y))
         pygame.display.update()
 
 # ================================ Game Loop ================================
+
+
 def game_loop():
     player = Player()
     PLAYER_LIST.add(player)
     game_over = False
     SKIN_ANGLE = 0
     game_pause = False
-    enemy_spawn_time = 0.0 
+    enemy_spawn_time = 0.0
     # GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play(-1)
     GAME_LOOP_SCREEN_BACKGROUND_Y = 0
     enemy_bullet_list = [
@@ -190,9 +205,9 @@ def game_loop():
                     BUTTON_HEIGHT_OF_PAUSE,
                 ).collidepoint(pos):
                     game_pause = not False
-                elif pygame.Rect(GAME_CONTINUE_BUTTON_X,GAME_CONTINUE_BUTTON_Y - (SCREEN_HEIGHT // 3),BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
-                        game_pause = False
-        if(game_pause):
+                elif pygame.Rect(GAME_CONTINUE_BUTTON_X, GAME_CONTINUE_BUTTON_Y - (SCREEN_HEIGHT // 3), BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
+                    game_pause = False
+        if (game_pause):
             Game_pause()
             # Đặt âm lượng của nhạc nền thành rất nhỏ
             # GAME_LOOP_SCREEN_BACKGROUND_MUSIC.set_volume(0.01)
@@ -254,7 +269,7 @@ def game_loop():
                 game_over = True
 
     if game_over:
-        game_stop_loop()
+        game_stop_loop(player)
 
 
 if __name__ == "__main__":
