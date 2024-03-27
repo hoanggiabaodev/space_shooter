@@ -101,5 +101,22 @@ ENEMY_LEVEL_4_EXPLOSION_EFFECT = gif_pygame.load(
 ENEMY_LEVEL_5_EXPLOSION_EFFECT = gif_pygame.load(
     "resources/images/Enemy_Level_5_Explosion_Effect.gif"
 )
+
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, y, image, speed_x, speed_y, health, damage, defense):
+        super().__init__()
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+        self.health = health
+        self.damage = damage
+        self.defense = defense
+        self.explosion_effect = None  # Đối tượng hiệu ứng nổ
+
+
 ###### Danh sách Enemy:
 ENEMY_LIST = pygame.sprite.Group()

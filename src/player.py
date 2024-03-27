@@ -312,11 +312,15 @@ class Player(pygame.sprite.Sprite):
         hit_box_x = self.rect.centerx - PLAYER_HIT_BOX_WIDTH // 2
         hit_box_y = self.rect.centery - PLAYER_HIT_BOX_HEIGHT // 2
         if (
-            enemy.x + enemy.rect.width >= hit_box_x
-            and enemy.x <= hit_box_x + PLAYER_HIT_BOX_WIDTH
+            # enemy.x + enemy.rect.width >= hit_box_x
+            # and enemy.x <= hit_box_x + PLAYER_HIT_BOX_WIDTH
+            enemy.rect.right >= hit_box_x
+            and enemy.rect.left <= hit_box_x + PLAYER_HIT_BOX_WIDTH
         ) and (
-            enemy.y + enemy.rect.height >= hit_box_y
-            and enemy.y <= hit_box_y + PLAYER_HIT_BOX_HEIGHT
+            # enemy.y + enemy.rect.height >= hit_box_y
+            # and enemy.y <= hit_box_y + PLAYER_HIT_BOX_HEIGHT
+            enemy.rect.bottom >= hit_box_y
+            and enemy.rect.top <= hit_box_y + PLAYER_HIT_BOX_HEIGHT
         ):
             enemy.kill()
             self.explosion_time = pygame.time.get_ticks()
