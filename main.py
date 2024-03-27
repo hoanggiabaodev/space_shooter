@@ -60,15 +60,16 @@ from constants.bullet_player import PLAYER_BULLET_NORMAL_SOUND,PLAYER_BULLET_SPE
 # ================================ Game Start Loop ================================
 
 def game_start_loop():
-    GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play()
+    
     while True:
         GAME_START_SCREEN.blit(GAME_START_SCREEN_BACKGROUND, (0, 0))
         GAME_START_SCREEN.blit(START_IMAGE, (START_IMAGE_X, START_IMAGE_Y))
         GAME_START_SCREEN.blit(
-            GAME_PLAY_BUTTON, (GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y)
+            GAME_PLAY_BUTTON, (GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y - 20)
         )
+        GAME_START_SCREEN.blit(GAME_SELECT_BUTTON,(GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y+54))
         GAME_START_SCREEN.blit(
-            GAME_EXIT_BUTTON, (GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y)
+            GAME_EXIT_BUTTON, (GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y+50)
         )
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,11 +77,14 @@ def game_start_loop():
             elif event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 if pygame.Rect(
-                    GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
+                    GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y - 20, BUTTON_WIDTH, BUTTON_HEIGHT
                 ).collidepoint(pos):
+                    GAME_LOOP_SCREEN_BACKGROUND_MUSIC.play()
                     game_loop()
+                elif pygame.Rect(GAME_SELECT_BUTTON_X,GAME_SELECT_BUTTON_Y+54,BUTTON_WIDTH,BUTTON_HEIGHT).collidepoint(pos):
+                    game_select()
                 elif pygame.Rect(
-                    GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
+                    GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y+50, BUTTON_WIDTH, BUTTON_HEIGHT
                 ).collidepoint(pos):
                     sys.exit()
             elif event.type == pygame.KEYDOWN:
@@ -230,7 +234,6 @@ def game_select():
                 if event.button == 1:
                     pos = pygame.mouse.get_pos()
                 if pygame.Rect(GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y + 100, BUTTON_WIDTH, BUTTON_HEIGHT).collidepoint(pos):
-                    Game_pause()
                     return
                 if pygame.Rect(THUMB_X, THUMB_Y, THUMB_WIDTH, THUMB_HEIGHT).collidepoint(pos):
                     dragging = True

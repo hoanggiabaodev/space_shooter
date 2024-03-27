@@ -7,7 +7,7 @@ from constants.setup import NUMBER_0, NUMBER_1, NUMBER_2, NUMBER_3, NUMBER_4, NU
 from constants.item import ITEM_SPECIAL_DURATION, ITEM_SPREAD_DURATION, ITEM_AROUND_DURATION, ITEM_LASER_DURATION, ITEM_HEALTH_REGENERATION
 from constants.item import ITEM_HEALTH, ITEM_SPECIAL, ITEM_SPREAD, ITEM_AROUND, ITEM_LASER
 from src.bullet_player import BulletPlayer
-
+from constants.enemy import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -201,7 +201,18 @@ class Player(pygame.sprite.Sprite):
                     LASER_TYPE
                 )
                 PLAYER_BULLET_LASER_SOUND.play()
-         
+    # def handle_impact_of_enemy (self):
+    #     count_sprite = len(ENEMY_LIST)
+    #     if(count_sprite > 0):
+    #         for enemy_sprite in ENEMY_LIST:
+    #             if(pygame.sprite.collide_rect(self, enemy_sprite)):
+    #                 self.health -= 1
+    #                 if self.health <= 0:
+    #                     self.death_time = pygame.time.get_ticks()
+    #                     self.game_over = True
+    #                     break  
+    #     else: return
+        
     def player_hit(self, bullet):
         hit_box_x = self.rect.centerx - PLAYER_HIT_BOX_WIDTH // 2
         hit_box_y = self.rect.centery - PLAYER_HIT_BOX_HEIGHT // 2
@@ -216,7 +227,6 @@ class Player(pygame.sprite.Sprite):
                         self.death_time = pygame.time.get_ticks()
                         self.game_over = True  
 
-                        
         if self.explosion_time is not None:
             current_time = pygame.time.get_ticks()
             if current_time - self.explosion_time < PLAYER_EXPLOSION_EFFECT_TIME:
@@ -262,7 +272,7 @@ class Player(pygame.sprite.Sprite):
             self.draw_health_bar()
             self.draw_info()
             self.move()
-            
+            self.handle_impact_of_enemy()
             if self.transform_start_time is not None and self.transform_duration is not None:
                 current_time = pygame.time.get_ticks()
                 elapsed_time = current_time - self.transform_start_time
