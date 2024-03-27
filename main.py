@@ -365,6 +365,11 @@ def game_loop():
 
             for enemy in ENEMY_LIST:
                 enemy.update()
+            
+            for enemy in ENEMY_LIST:
+                enemy.update()
+                player.player_collide(enemy)
+
 
             # ====================================== PLAYER ====================================== #
             SKIN_ANGLE += 1
@@ -377,7 +382,6 @@ def game_loop():
             for bullet in PLAYER_BULLET_LIST:
                 for enemy in ENEMY_LIST:
                     enemy.enemy_hit(bullet, player)
-
             for bullet_list in enemy_bullet_list:
                 for bullet in bullet_list:
                     bullet.update()
