@@ -389,7 +389,7 @@ def game_loop():
             # ====================================== PLAYER BULLET ====================================== #
             for bullet in PLAYER_BULLET_LIST:
                 bullet.update(player)
-
+           
             # ====================================== ITEM ====================================== #
             for item in ITEM_LIST:
                 item.update()

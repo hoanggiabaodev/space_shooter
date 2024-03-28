@@ -7,7 +7,7 @@ from constants.setup import NUMBER_0, NUMBER_1, NUMBER_2, NUMBER_3, NUMBER_4, NU
 from constants.item import ITEM_SPECIAL_DURATION, ITEM_SPREAD_DURATION, ITEM_AROUND_DURATION, ITEM_LASER_DURATION, ITEM_HEALTH_REGENERATION
 from constants.item import ITEM_HEALTH, ITEM_SPECIAL, ITEM_SPREAD, ITEM_AROUND, ITEM_LASER
 from src.bullet_player import BulletPlayer
-from constants.enemy import *
+from constants.enemy import * 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -201,17 +201,37 @@ class Player(pygame.sprite.Sprite):
                     LASER_TYPE
                 )
                 PLAYER_BULLET_LASER_SOUND.play()
-    # def handle_impact_of_enemy (self):
-    #     count_sprite = len(ENEMY_LIST)
-    #     if(count_sprite > 0):
-    #         for enemy_sprite in ENEMY_LIST:
-    #             if(pygame.sprite.collide_rect(self, enemy_sprite)):
-    #                 self.health -= 1
-    #                 if self.health <= 0:
-    #                     self.death_time = pygame.time.get_ticks()
-    #                     self.game_over = True
-    #                     break  
-    #     else: return
+    def handle_impact_of_player (self):
+        count_enemy = len(ENEMY_LIST)
+        if(count_enemy == 0): return
+        else:
+            for enemy_sprite in ENEMY_LIST:
+                if(pygame.sprite.collide_rect(self, enemy_sprite)):
+                    self.explosion_time = pygame.time.get_ticks()
+                    self.health -= 1
+                    if self.health <= 0:
+                        self.health = 0
+                        self.death_time = pygame.time.get_ticks()
+                        self.game_over = True
+                        PLAYER_BULLET_LIST.empty()
+                if self.explosion_time is not None:
+                    current_time = pygame.time.get_ticks()
+                    if current_time - self.explosion_time < PLAYER_EXPLOSION_EFFECT_TIME:
+                        self.explosion_effect.render(GAME_LOOP_SCREEN, (self.rect.centerx - self.rect.width // 2, self.rect.centery - self.rect.height))
+                    else:
+                        self.explosion_time = None
+                if self.death_time is not None:
+                    current_time = pygame.time.get_ticks()
+                    if current_time - self.death_time < PLAYER_DEATH_EFFECT_TIME:
+                        PLAYER_DEATH_SOUND.play()
+                        self.death_effect.render(GAME_LOOP_SCREEN, (self.rect.centerx - 100, self.rect.centery - 100))
+                    else:
+                        self.death_time = None
+                        PLAYER_LIST.empty()
+                        ENEMY_LIST.empty()
+                    break
+            return
+            
         
     def player_hit(self, bullet):
         hit_box_x = self.rect.centerx - PLAYER_HIT_BOX_WIDTH // 2
@@ -224,6 +244,7 @@ class Player(pygame.sprite.Sprite):
                 if self.health > 0:
                     self.health -= actual_damage
                     if self.health <= 0:
+                        self.health = 0
                         self.death_time = pygame.time.get_ticks()
                         self.game_over = True  
 
@@ -272,7 +293,7 @@ class Player(pygame.sprite.Sprite):
             self.draw_health_bar()
             self.draw_info()
             self.move()
-            self.handle_impact_of_enemy()
+            self.handle_impact_of_player()
             if self.transform_start_time is not None and self.transform_duration is not None:
                 current_time = pygame.time.get_ticks()
                 elapsed_time = current_time - self.transform_start_time
