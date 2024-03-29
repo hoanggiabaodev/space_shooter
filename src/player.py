@@ -36,6 +36,7 @@ from constants.item import (
     ITEM_LASER,
 )
 from src.bullet_player import BulletPlayer
+from constants.enemy import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -281,6 +282,7 @@ class Player(pygame.sprite.Sprite):
                 if self.health > 0:
                     self.health -= actual_damage
                     if self.health <= 0:
+                        self.health = 0
                         self.death_time = pygame.time.get_ticks()
                         self.game_over = True
 
@@ -391,7 +393,6 @@ class Player(pygame.sprite.Sprite):
             self.draw_health_bar()
             self.draw_info()
             self.move()
-
             if (
                 self.transform_start_time is not None
                 and self.transform_duration is not None
