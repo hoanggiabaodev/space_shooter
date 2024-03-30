@@ -24,6 +24,7 @@ class Enemy(pygame.sprite.Sprite):
         self.last_shot = pygame.time.get_ticks()
         self.explosion_effect = ENEMY_LEVEL_1_EXPLOSION_EFFECT
         self.explosion_time = 0
+        self.score = ENEMY_LEVEL_1_SCORE
 
     def draw(self):
         GAME_LOOP_SCREEN.blit(self.image, (self.rect.x, self.rect.y))
@@ -157,7 +158,7 @@ class Enemy(pygame.sprite.Sprite):
                         if random.random() < ITEM_FREQUENCY_RATE:
                             Item.generate_items(self.rect.x, self.rect.y)
                         self.kill()
-                        player.score += 1
+                        player.score += self.score
 
         if self.explosion_time > 0:
             current_time = pygame.time.get_ticks()
@@ -191,6 +192,7 @@ class Enemy(pygame.sprite.Sprite):
             enemy.damage = ENEMY_LEVEL_1_DAMAGE
             enemy.defense = ENEMY_LEVEL_1_DEFENSE
             enemy.explosion_effect = ENEMY_LEVEL_1_EXPLOSION_EFFECT
+            enemy.score = ENEMY_LEVEL_1_SCORE
         elif level == LEVEL_2:
             enemy.level = LEVEL_2
             enemy.image = ENEMY_LEVEL_2_IMAGE
@@ -200,6 +202,7 @@ class Enemy(pygame.sprite.Sprite):
             enemy.damage = ENEMY_LEVEL_2_DAMAGE
             enemy.defense = ENEMY_LEVEL_2_DEFENSE
             enemy.explosion_effect = ENEMY_LEVEL_2_EXPLOSION_EFFECT
+            enemy.score = ENEMY_LEVEL_2_SCORE
         elif level == LEVEL_3:
             enemy.level = LEVEL_3
             enemy.image = ENEMY_LEVEL_3_IMAGE
@@ -209,6 +212,7 @@ class Enemy(pygame.sprite.Sprite):
             enemy.damage = ENEMY_LEVEL_3_DAMAGE
             enemy.defense = ENEMY_LEVEL_3_DEFENSE
             enemy.explosion_effect = ENEMY_LEVEL_3_EXPLOSION_EFFECT
+            enemy.score = ENEMY_LEVEL_3_SCORE
         elif level == LEVEL_4:
             enemy.level = LEVEL_4
             enemy.image = ENEMY_LEVEL_4_IMAGE
@@ -218,6 +222,7 @@ class Enemy(pygame.sprite.Sprite):
             enemy.damage = ENEMY_LEVEL_4_DAMAGE
             enemy.defense = ENEMY_LEVEL_4_DEFENSE
             enemy.explosion_effect = ENEMY_LEVEL_4_EXPLOSION_EFFECT
+            enemy.score = ENEMY_LEVEL_4_SCORE
         elif level == LEVEL_5:
             enemy.level = LEVEL_5
             enemy.image = ENEMY_LEVEL_5_IMAGE
@@ -227,5 +232,6 @@ class Enemy(pygame.sprite.Sprite):
             enemy.damage = ENEMY_LEVEL_5_DAMAGE
             enemy.defense = ENEMY_LEVEL_5_DEFENSE
             enemy.explosion_effect = ENEMY_LEVEL_5_EXPLOSION_EFFECT
+            enemy.score = ENEMY_LEVEL_5_SCORE
         enemy.rect = enemy.image.get_rect()
         ENEMY_LIST.add(enemy)
