@@ -318,7 +318,7 @@ def game_select():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     pos = pygame.mouse.get_pos()
                 if pygame.Rect(
