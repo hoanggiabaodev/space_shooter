@@ -1,4 +1,5 @@
 import pygame, sys, time
+current_username = None
 
 GAME_LOGO = pygame.image.load("resources/images/Game_Logo.png")
 
