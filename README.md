@@ -39,9 +39,9 @@ Các tính năng của game OS Game bao gồm:
 - Điểm số được tính toán và hiển thị trên màn hình để người chơi có thể theo dõi tiến trình của mình.
 
 ## Tác giả
-- Tên: Trương Thành Đại và Nhóm 1
-- Email: thanhdaibl1572002gmail.com.com
-- Github: https://github.com/thanhdaibl1572002
+- Tên: 
+- Email: 
+- Github:
 
 ## Giấy phép
 - Dự án này được cấp phép theo Giấy phép MIT - xem tệp LICENSE để biết chi tiết.
