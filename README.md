@@ -62,7 +62,7 @@ To play OS Game, you need to install Python and Pygame library on your computer.
 ### 4. Install gif_pygame:
 - pip install gif_pygame
 ### 5. Download OS Game:
-- https://thanhdaibl1572002.github.io/osgame/
+-
 ### 6. Extract OS Game:
 - cd Downloads
 - tar -xzf osgame-python.tar.gz
@@ -87,9 +87,7 @@ The features of OS Game game include:
 - Score is calculated and displayed on the screen so players can keep track of their progress.
 
 ## Author
-- Name: Truong Thanh Dai and Group 1
-- Email: thanhdaibl1572002gmail.com
-- Github: https://github.com/thanhdaibl1572002
+- 
 
 ## License
 - This project is licensed under the MIT License - see the LICENSE file for details.
