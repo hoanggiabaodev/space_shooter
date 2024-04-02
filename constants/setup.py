@@ -1,5 +1,4 @@
 import pygame, sys, time
-current_username = None
 
 GAME_LOGO = pygame.image.load("resources/images/Game_Logo.png")
 
@@ -7,6 +6,7 @@ pygame.init()
 pygame.display.set_caption("Space Shooter")
 pygame.display.set_icon(GAME_LOGO)
 clock = pygame.time.Clock()
+current_username = None
 FPS = 60
 
 ###### Setup kiểu bắn đạn:
