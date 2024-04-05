@@ -14,17 +14,17 @@ current_mode = "login"
 def toggle_login_register():
     global current_mode
     if current_mode == "login":
-        label_username.grid(row=0, column=0, padx=(100, 10), pady=(250, 5), sticky="e")
-        entry_username.grid(row=0, column=1, padx=10, pady=(250, 5))
-        label_password.grid(row=1, column=0, padx=(100, 10), pady=5, sticky="e")
+        label_username.grid(row=0, column=0, padx=(70, 10), pady=(200, 5), sticky="e")
+        entry_username.grid(row=0, column=1, padx=10, pady=(200, 5))
+        label_password.grid(row=1, column=0, padx=(70, 10), pady=5, sticky="e")
         entry_password.grid(row=1, column=1, padx=10, pady=5)
-        label_confirm_password.grid(row=2, column=0, padx=(100, 10), pady=5, sticky="e")
+        label_confirm_password.grid(row=2, column=0, padx=(70, 10), pady=5, sticky="e")
         entry_confirm_password.grid(row=2, column=1, padx=10, pady=5)
         button_auth.grid(
-            row=3, column=0, columnspan=2, padx=(100, 10), pady=10, sticky="we"
+            row=3, column=0, columnspan=2, padx=(70, 10), pady=10, sticky="we"
         )
         button_toggle.grid(
-            row=4, column=0, columnspan=2, padx=(100, 10), pady=(5, 10), sticky="we"
+            row=4, column=0, columnspan=2, padx=(70, 10), pady=(5, 10), sticky="we"
         )
         button_toggle.config(
             text="Already have an account? Login here!",
@@ -40,12 +40,12 @@ def toggle_login_register():
         entry_confirm_password.grid_forget()
 
         # Định vị lại các widget cho chế độ login
-        label_username.grid(row=0, column=0, padx=(100, 10), pady=(250, 5), sticky="e")
-        entry_username.grid(row=0, column=1, padx=10, pady=(250, 5))
-        label_password.grid(row=1, column=0, padx=(100, 10), pady=5, sticky="e")
+        label_username.grid(row=0, column=0, padx=(70, 10), pady=(200, 5), sticky="e")
+        entry_username.grid(row=0, column=1, padx=10, pady=(200, 5))
+        label_password.grid(row=1, column=0, padx=(70, 10), pady=5, sticky="e")
         entry_password.grid(row=1, column=1, padx=10, pady=5)
         button_auth.grid(
-            row=2, column=0, columnspan=2, padx=(100, 10), pady=10, sticky="we"
+            row=2, column=0, columnspan=2, padx=(70, 10), pady=10, sticky="we"
         )
         button_toggle.config(
             text="Don't have an account? Register here!",
@@ -166,12 +166,12 @@ button_toggle.config(
 
 
 # Định vị các widgets
-label_username.grid(row=0, column=0, padx=(100, 10), pady=(250, 5), sticky="e")
-label_password.grid(row=1, column=0, padx=(100, 10), pady=5, sticky="e")
-entry_username.grid(row=0, column=1, padx=10, pady=(250, 5))
+label_username.grid(row=0, column=0, padx=(70, 10), pady=(200, 5), sticky="e")
+label_password.grid(row=1, column=0, padx=(70, 10), pady=5, sticky="e")
+entry_username.grid(row=0, column=1, padx=10, pady=(200, 5))
 entry_password.grid(row=1, column=1, padx=10, pady=5)
-button_auth.grid(row=2, column=0, columnspan=2, padx=(100, 10), pady=10, sticky="we")
+button_auth.grid(row=2, column=0, columnspan=2, padx=(70, 10), pady=10, sticky="we")
 button_toggle.grid(
-    row=3, column=0, columnspan=2, padx=(100, 10), pady=(5, 10), sticky="we"
+    row=3, column=0, columnspan=2, padx=(70, 10), pady=(5, 10), sticky="we"
 )
 root.mainloop()
