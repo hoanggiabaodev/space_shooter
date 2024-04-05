@@ -145,4 +145,5 @@ button_auth.grid(row=2, column=0, columnspan=2,
                  padx=(70, 10), pady=10, sticky="we")
 button_toggle.grid(row=3, column=0, columnspan=2,
                    padx=(70, 10), pady=(5, 10), sticky="we")
-root.mainloop()
+if __name__ == "__main__":
+    root.mainloop()

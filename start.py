@@ -517,7 +517,3 @@ def game_loop():
 
     if game_over:
         game_stop_loop(player)
-
-
-# if __name__ == "__main__":
-#     game_start_loop()
