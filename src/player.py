@@ -27,6 +27,7 @@ from constants.item import (
     ITEM_AROUND_DURATION,
     ITEM_LASER_DURATION,
     ITEM_HEALTH_REGENERATION,
+    ITEM_UPDATE_LEVEL_UP,
 )
 from constants.item import (
     ITEM_HEALTH,
@@ -34,6 +35,7 @@ from constants.item import (
     ITEM_SPREAD,
     ITEM_AROUND,
     ITEM_LASER,
+    ITEM_UPDATE,
 )
 from src.bullet_player import BulletPlayer
 from constants.enemy import *
@@ -64,6 +66,7 @@ class Player(pygame.sprite.Sprite):
         self.transform_start_time = None
         self.transform_duration = None
         self.game_over = False
+        self.count_bullet = PLAYER_BULLET_NORMAL_COUNT
 
     def move(self):
         if not self.game_over:
@@ -184,7 +187,8 @@ class Player(pygame.sprite.Sprite):
                     - PLAYER_BULLET_NORMAL_WIDTH // 2,
                     self.rect.y - PLAYER_BULLET_NORMAL_HEIGHT // 2,
                     PLAYER_BULLET_NORMAL_SPEED,
-                    PLAYER_BULLET_NORMAL_COUNT,
+                    # PLAYER_BULLET_NORMAL_COUNT,
+                    self.count_bullet,
                     PLAYER_BULLET_NORMAL_START_ANGLE,
                     PLAYER_BULLET_NORMAL_END_ANGLE,
                     NORMAL_TYPE,
@@ -325,6 +329,8 @@ class Player(pygame.sprite.Sprite):
             if actual_damage > 0:
                 if self.health > 0:
                     self.health -= actual_damage
+                    if self.count_bullet > 1:
+                        self.count_bullet -= 1
                     if self.health <= 0:
                         self.health = 0
                         self.death_time = pygame.time.get_ticks()
@@ -368,7 +374,7 @@ class Player(pygame.sprite.Sprite):
             enemy.rect.bottom >= hit_box_y
             and enemy.rect.top <= hit_box_y + PLAYER_HIT_BOX_HEIGHT
         ):
-            enemy.kill()
+            # enemy.kill()
             self.explosion_time = pygame.time.get_ticks()
             actual_damage = enemy.damage - self.defense
             if actual_damage > 0:
@@ -403,6 +409,7 @@ class Player(pygame.sprite.Sprite):
                 PLAYER_LIST.empty()
 
     def get_item(self, item):
+        # count_bullet = PLAYER_BULLET_NORMAL_COUNT
         if (
             self.rect.x + self.rect.width >= item.rect.x
             and self.rect.x <= item.rect.x + item.rect.width
@@ -416,6 +423,10 @@ class Player(pygame.sprite.Sprite):
                     self.health += ITEM_HEALTH_REGENERATION
                 if self.health >= PLAYER_HEALTH:
                     self.health = PLAYER_HEALTH
+            elif item.type == ITEM_UPDATE:
+                # self.type = NORMAL_TYPE
+                if self.count_bullet < 5:
+                    self.count_bullet += ITEM_UPDATE_LEVEL_UP
             elif item.type == ITEM_SPECIAL:
                 self.type = SPECIAL_TYPE
                 self.transform_duration = ITEM_SPECIAL_DURATION
