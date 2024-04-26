@@ -175,6 +175,8 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self):
         now = pygame.time.get_ticks()
+        if self.game_over:
+            return
         if self.type == NORMAL_TYPE:
             self.damage = PLAYER_NORMAL_DAMAGE
             self.defense = PLAYER_NORMAL_DEFENSE

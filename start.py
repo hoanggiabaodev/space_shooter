@@ -479,11 +479,10 @@ def game_loop():
 
             for enemy in ENEMY_LIST:
                 enemy.update()
-            
+
             for enemy in ENEMY_LIST:
                 enemy.update()
                 player.player_collide(enemy)
-
 
             # ====================================== PLAYER ====================================== #
             SKIN_ANGLE += 1
