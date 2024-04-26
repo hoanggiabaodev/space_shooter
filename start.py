@@ -341,16 +341,9 @@ def game_select():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pos = pygame.mouse.get_pos()
-                if pygame.Rect(
-                    GAME_BACK_BUTTON_X,
-                    GAME_BACK_BUTTON_Y + 100,
-                    BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
-                ).collidepoint(pos):
-                    return
                 if pygame.Rect(
                     THUMB_X, THUMB_Y, THUMB_WIDTH, THUMB_HEIGHT
                 ).collidepoint(pos):
@@ -363,6 +356,14 @@ def game_select():
                 if event.button == 1:
                     dragging = False
                     dragging_effect = False
+                    pos = pygame.mouse.get_pos()
+                    if pygame.Rect(
+                        GAME_BACK_BUTTON_X,
+                        GAME_BACK_BUTTON_Y + 100,
+                        BUTTON_WIDTH,
+                        BUTTON_HEIGHT,
+                    ).collidepoint(pos):
+                        return
             elif event.type == pygame.MOUSEMOTION:
                 if dragging:
                     pos = pygame.mouse.get_pos()
