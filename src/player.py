@@ -175,101 +175,100 @@ class Player(pygame.sprite.Sprite):
 
     def shoot(self):
         now = pygame.time.get_ticks()
-        if self.game_over:
-            return
-        if self.type == NORMAL_TYPE:
-            self.damage = PLAYER_NORMAL_DAMAGE
-            self.defense = PLAYER_NORMAL_DEFENSE
-            if now - self.last_shot >= PLAYER_BULLET_NORMAL_DELAY:
-                self.last_shot = now
-                BulletPlayer.generate_bullets_player(
-                    PLAYER_BULLET_NORMAL_IMAGE,
-                    self.rect.x
-                    + PLAYER_NORMAL_WIDTH // 2
-                    - PLAYER_BULLET_NORMAL_WIDTH // 2,
-                    self.rect.y - PLAYER_BULLET_NORMAL_HEIGHT // 2,
-                    PLAYER_BULLET_NORMAL_SPEED,
-                    # PLAYER_BULLET_NORMAL_COUNT,
-                    self.count_bullet,
-                    PLAYER_BULLET_NORMAL_START_ANGLE,
-                    PLAYER_BULLET_NORMAL_END_ANGLE,
-                    NORMAL_TYPE,
-                )
-                PLAYER_BULLET_NORMAL_SOUND.play()
-        elif self.type == SPECIAL_TYPE:
-            self.damage = PLAYER_SPECIAL_DAMAGE
-            self.defense = PLAYER_SPECIAL_DEFENSE
-            if now - self.last_shot >= PLAYER_BULLET_SPECIAL_DELAY:
-                self.last_shot = now
-                BulletPlayer.generate_bullets_player(
-                    PLAYER_BULLET_SPECIAL_IMAGE,
-                    self.rect.x
-                    + PLAYER_SPECIAL_WIDTH // 2
-                    - PLAYER_BULLET_SPECIAL_WIDTH // 2,
-                    self.rect.y - PLAYER_BULLET_SPECIAL_HEIGHT // 2,
-                    PLAYER_BULLET_SPECIAL_SPEED,
-                    PLAYER_BULLET_SPECIAL_COUNT,
-                    PLAYER_BULLET_SPECIAL_START_ANGLE,
-                    PLAYER_BULLET_SPECIAL_END_ANGLE,
-                    SPECIAL_TYPE,
-                )
-                PLAYER_BULLET_SPECIAL_SOUND.play()
-        elif self.type == SPREAD_TYPE:
-            self.damage = PLAYER_SPREAD_DAMAGE
-            self.defense = PLAYER_SPREAD_DEFENSE
-            if now - self.last_shot >= PLAYER_BULLET_SPREAD_DELAY:
-                self.last_shot = now
-                BulletPlayer.generate_bullets_player(
-                    PLAYER_BULLET_SPREAD_IMAGE,
-                    self.rect.x
-                    + PLAYER_SPREAD_WIDTH // 2
-                    - PLAYER_BULLET_SPREAD_WIDTH // 2,
-                    self.rect.y - PLAYER_BULLET_SPREAD_HEIGHT // 2 - 30,
-                    PLAYER_BULLET_SPREAD_SPEED,
-                    PLAYER_BULLET_SPREAD_COUNT,
-                    PLAYER_BULLET_SPREAD_START_ANGLE,
-                    PLAYER_BULLET_SPREAD_END_ANGLE,
-                    SPREAD_TYPE,
-                )
-                PLAYER_BULLET_SPREAD_SOUND.play()
-        elif self.type == AROUND_TYPE:
-            self.damage = PLAYER_AROUND_DAMAGE
-            self.defense = PLAYER_AROUND_DEFENSE
-            if now - self.last_shot >= PLAYER_BULLET_AROUND_DELAY:
-                self.last_shot = now
-                BulletPlayer.generate_bullets_player(
-                    PLAYER_BULLET_AROUND_IMAGE,
-                    self.rect.x
-                    + PLAYER_AROUND_WIDTH // 2
-                    - PLAYER_BULLET_AROUND_WIDTH // 2,
-                    self.rect.y
-                    + PLAYER_AROUND_HEIGHT // 2
-                    - PLAYER_BULLET_AROUND_HEIGHT // 2,
-                    PLAYER_BULLET_AROUND_SPEED,
-                    PLAYER_BULLET_AROUND_COUNT,
-                    PLAYER_BULLET_AROUND_START_ANGLE,
-                    PLAYER_BULLET_AROUND_END_ANGLE,
-                    AROUND_TYPE,
-                )
-                PLAYER_BULLET_AROUND_SOUND.play()
-        elif self.type == LASER_TYPE:
-            self.damage = PLAYER_LASER_DAMAGE
-            self.defense = PLAYER_LASER_DEFENSE
-            if now - self.last_shot >= PLAYER_BULLET_LASER_DELAY:
-                self.last_shot = now
-                BulletPlayer.generate_bullets_player(
-                    PLAYER_BULLET_LASER_IMAGE,
-                    self.rect.x
-                    + PLAYER_LASER_WIDTH // 2
-                    - PLAYER_BULLET_LASER_WIDTH // 2,
-                    self.rect.y - 20,
-                    PLAYER_BULLET_LASER_SPEED,
-                    PLAYER_BULLET_LASER_COUNT,
-                    PLAYER_BULLET_LASER_START_ANGLE,
-                    PLAYER_BULLET_LASER_END_ANGLE,
-                    LASER_TYPE,
-                )
-                PLAYER_BULLET_LASER_SOUND.play()
+        if self.health > 0:
+            if self.type == NORMAL_TYPE:
+                self.damage = PLAYER_NORMAL_DAMAGE
+                self.defense = PLAYER_NORMAL_DEFENSE
+                if now - self.last_shot >= PLAYER_BULLET_NORMAL_DELAY:
+                    self.last_shot = now
+                    BulletPlayer.generate_bullets_player(
+                        PLAYER_BULLET_NORMAL_IMAGE,
+                        self.rect.x
+                        + PLAYER_NORMAL_WIDTH // 2
+                        - PLAYER_BULLET_NORMAL_WIDTH // 2,
+                        self.rect.y - PLAYER_BULLET_NORMAL_HEIGHT // 2,
+                        PLAYER_BULLET_NORMAL_SPEED,
+                        # PLAYER_BULLET_NORMAL_COUNT,
+                        self.count_bullet,
+                        PLAYER_BULLET_NORMAL_START_ANGLE,
+                        PLAYER_BULLET_NORMAL_END_ANGLE,
+                        NORMAL_TYPE,
+                    )
+                    PLAYER_BULLET_NORMAL_SOUND.play()
+            elif self.type == SPECIAL_TYPE:
+                self.damage = PLAYER_SPECIAL_DAMAGE
+                self.defense = PLAYER_SPECIAL_DEFENSE
+                if now - self.last_shot >= PLAYER_BULLET_SPECIAL_DELAY:
+                    self.last_shot = now
+                    BulletPlayer.generate_bullets_player(
+                        PLAYER_BULLET_SPECIAL_IMAGE,
+                        self.rect.x
+                        + PLAYER_SPECIAL_WIDTH // 2
+                        - PLAYER_BULLET_SPECIAL_WIDTH // 2,
+                        self.rect.y - PLAYER_BULLET_SPECIAL_HEIGHT // 2,
+                        PLAYER_BULLET_SPECIAL_SPEED,
+                        PLAYER_BULLET_SPECIAL_COUNT,
+                        PLAYER_BULLET_SPECIAL_START_ANGLE,
+                        PLAYER_BULLET_SPECIAL_END_ANGLE,
+                        SPECIAL_TYPE,
+                    )
+                    PLAYER_BULLET_SPECIAL_SOUND.play()
+            elif self.type == SPREAD_TYPE:
+                self.damage = PLAYER_SPREAD_DAMAGE
+                self.defense = PLAYER_SPREAD_DEFENSE
+                if now - self.last_shot >= PLAYER_BULLET_SPREAD_DELAY:
+                    self.last_shot = now
+                    BulletPlayer.generate_bullets_player(
+                        PLAYER_BULLET_SPREAD_IMAGE,
+                        self.rect.x
+                        + PLAYER_SPREAD_WIDTH // 2
+                        - PLAYER_BULLET_SPREAD_WIDTH // 2,
+                        self.rect.y - PLAYER_BULLET_SPREAD_HEIGHT // 2 - 30,
+                        PLAYER_BULLET_SPREAD_SPEED,
+                        PLAYER_BULLET_SPREAD_COUNT,
+                        PLAYER_BULLET_SPREAD_START_ANGLE,
+                        PLAYER_BULLET_SPREAD_END_ANGLE,
+                        SPREAD_TYPE,
+                    )
+                    PLAYER_BULLET_SPREAD_SOUND.play()
+            elif self.type == AROUND_TYPE:
+                self.damage = PLAYER_AROUND_DAMAGE
+                self.defense = PLAYER_AROUND_DEFENSE
+                if now - self.last_shot >= PLAYER_BULLET_AROUND_DELAY:
+                    self.last_shot = now
+                    BulletPlayer.generate_bullets_player(
+                        PLAYER_BULLET_AROUND_IMAGE,
+                        self.rect.x
+                        + PLAYER_AROUND_WIDTH // 2
+                        - PLAYER_BULLET_AROUND_WIDTH // 2,
+                        self.rect.y
+                        + PLAYER_AROUND_HEIGHT // 2
+                        - PLAYER_BULLET_AROUND_HEIGHT // 2,
+                        PLAYER_BULLET_AROUND_SPEED,
+                        PLAYER_BULLET_AROUND_COUNT,
+                        PLAYER_BULLET_AROUND_START_ANGLE,
+                        PLAYER_BULLET_AROUND_END_ANGLE,
+                        AROUND_TYPE,
+                    )
+                    PLAYER_BULLET_AROUND_SOUND.play()
+            elif self.type == LASER_TYPE:
+                self.damage = PLAYER_LASER_DAMAGE
+                self.defense = PLAYER_LASER_DEFENSE
+                if now - self.last_shot >= PLAYER_BULLET_LASER_DELAY:
+                    self.last_shot = now
+                    BulletPlayer.generate_bullets_player(
+                        PLAYER_BULLET_LASER_IMAGE,
+                        self.rect.x
+                        + PLAYER_LASER_WIDTH // 2
+                        - PLAYER_BULLET_LASER_WIDTH // 2,
+                        self.rect.y - 20,
+                        PLAYER_BULLET_LASER_SPEED,
+                        PLAYER_BULLET_LASER_COUNT,
+                        PLAYER_BULLET_LASER_START_ANGLE,
+                        PLAYER_BULLET_LASER_END_ANGLE,
+                        LASER_TYPE,
+                    )
+                    PLAYER_BULLET_LASER_SOUND.play()
 
     def handle_impact_of_player(self):
         count_enemy = len(ENEMY_LIST)

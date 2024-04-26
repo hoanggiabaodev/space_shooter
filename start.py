@@ -1,10 +1,14 @@
 from constants.setup import *
 from constants.screen import (
+    GAME_COUNTDOWN_1,
+    GAME_COUNTDOWN_2,
+    GAME_COUNTDOWN_3,
     SCREEN_HEIGHT,
     GAME_LOOP_SCREEN,
     GAME_LOOP_SCREEN_BACKGROUND,
     GAME_LOOP_SCREEN_BACKGROUND_SPEED,
     GAME_LOOP_SCREEN_BACKGROUND_MUSIC,
+    SCREEN_WIDTH,
 )
 from constants.screen import GAME_START_SCREEN, GAME_START_SCREEN_BACKGROUND
 from constants.screen import GAME_STOP_SCREEN, GAME_STOP_SCREEN_BACKGROUND
@@ -184,7 +188,10 @@ def game_stop_loop(player):
 # ================================ Game Pause ===============================
 
 
-def Game_pause():
+def Game_pause(screen):
+    countdown_screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+    countdown_screen.blit(screen, (0, 0))
+    pygame.display.update()
     while True:
         GAME_PAUSE_SCREEN.blit(GAME_PAUSE_SCREEN_BACKGROUND, (0, 0))
         GAME_PAUSE_SCREEN.blit(
@@ -204,7 +211,20 @@ def Game_pause():
                 if pygame.Rect(
                     GAME_BACK_BUTTON_X, GAME_BACK_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
                 ).collidepoint(pos):
-                    # game_loop()
+                    screen.blit(countdown_screen, (0, 0))
+                    numbers = [
+                        GAME_COUNTDOWN_3,
+                        GAME_COUNTDOWN_2,
+                        GAME_COUNTDOWN_1,
+                    ]
+                    for number_image in numbers:
+                        number_width, number_height = number_image.get_size()
+                        x = (SCREEN_WIDTH - number_width) // 2
+                        y = (SCREEN_HEIGHT - number_height) // 2
+                        screen.blit(number_image, (x, y))
+                        pygame.display.update()
+                        pygame.time.wait(1000)
+                        screen.blit(countdown_screen, (0, 0))
                     return False
                 elif pygame.Rect(
                     GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT
@@ -444,6 +464,7 @@ def game_loop():
                     BUTTON_WIDTH_OF_PAUSE,
                     BUTTON_HEIGHT_OF_PAUSE,
                 ).collidepoint(pos):
+                    screen = pygame.display.get_surface()
                     game_pause = True
                 elif pygame.Rect(
                     GAME_CONTINUE_BUTTON_X,
@@ -453,7 +474,7 @@ def game_loop():
                 ).collidepoint(pos):
                     game_pause = False
         if game_pause:
-            game_pause = Game_pause()
+            game_pause = Game_pause(screen)
             if not game_pause:
                 game_pause = False
 
