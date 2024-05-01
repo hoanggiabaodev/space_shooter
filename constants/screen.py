@@ -43,6 +43,12 @@ GAME_PAUSE_SCREEN_BACKGROUND = pygame.transform.scale(
     (SCREEN_WIDTH, SCREEN_HEIGHT),
 )
 
+GAME_HIGHTCORE_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+GAME_HIGHTCORE_SCREEN_BACKGROUND = pygame.transform.scale(
+    pygame.image.load("resources/images/Game_Start_Background.png"),
+    (SCREEN_WIDTH, SCREEN_HEIGHT),
+)
+
 GAME_PLAY_BUTTON = pygame.transform.scale(
     pygame.image.load("resources/images/Game_Play_Button.png"),
     (BUTTON_WIDTH, BUTTON_HEIGHT),
@@ -65,6 +71,10 @@ GAME_BACK_BUTTON = pygame.transform.scale(
 )
 GAME_SELECT_BUTTON = pygame.transform.scale(
     pygame.image.load("resources/images/Game_Select_Button.png"),
+    (BUTTON_WIDTH, BUTTON_HEIGHT),
+)
+GAME_RANKING_BUTTON = pygame.transform.scale(
+    pygame.image.load("resources/images/Game_High_score_Button.png"),
     (BUTTON_WIDTH, BUTTON_HEIGHT),
 )
 GAME_COUNTDOWN_3 = pygame.transform.scale(

@@ -3,6 +3,9 @@ from constants.screen import (
     GAME_COUNTDOWN_1,
     GAME_COUNTDOWN_2,
     GAME_COUNTDOWN_3,
+    GAME_HIGHTCORE_SCREEN,
+    GAME_HIGHTCORE_SCREEN_BACKGROUND,
+    GAME_RANKING_BUTTON,
     SCREEN_HEIGHT,
     GAME_LOOP_SCREEN,
     GAME_LOOP_SCREEN_BACKGROUND,
@@ -88,6 +91,7 @@ from constants.bullet_player import (
     PLAYER_BULLET_AROUND_SOUND,
     PLAYER_BULLET_LASER_SOUND,
 )
+import mysql.connector
 
 # ================================ Game Start Loop ================================
 
@@ -101,7 +105,7 @@ def game_start_loop():
             GAME_PLAY_BUTTON, (GAME_PLAY_BUTTON_X, GAME_PLAY_BUTTON_Y - 20)
         )
         GAME_START_SCREEN.blit(
-            GAME_SELECT_BUTTON, (GAME_SELECT_BUTTON_X, GAME_SELECT_BUTTON_Y + 54)
+            GAME_RANKING_BUTTON, (GAME_SELECT_BUTTON_X, GAME_SELECT_BUTTON_Y + 54)
         )
         GAME_START_SCREEN.blit(
             GAME_EXIT_BUTTON, (GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y + 50)
@@ -125,7 +129,36 @@ def game_start_loop():
                     BUTTON_WIDTH,
                     BUTTON_HEIGHT,
                 ).collidepoint(pos):
-                    game_select()
+                    show_ranking = True  # Biến để kiểm soát việc hiển thị bảng xếp hạng
+
+                    while show_ranking:
+                        for event in pygame.event.get():
+                            if event.type == pygame.QUIT:
+                                sys.exit()
+                            elif event.type == pygame.MOUSEBUTTONUP:
+                                pos = pygame.mouse.get_pos()
+                                if pygame.Rect(
+                                    GAME_EXIT_BUTTON_X,
+                                    GAME_EXIT_BUTTON_Y + 50,
+                                    BUTTON_WIDTH,
+                                    BUTTON_HEIGHT,
+                                ).collidepoint(pos):
+                                    show_ranking = False  # Người dùng chọn nút "Back" => thoát khỏi vòng lặp
+
+                        # Vẽ nền và bảng xếp hạng
+                        GAME_HIGHTCORE_SCREEN.blit(
+                            GAME_HIGHTCORE_SCREEN_BACKGROUND, (0, 0)
+                        )
+                        draw_ranking_table(GAME_HIGHTCORE_SCREEN, current_username)
+
+                        # Vẽ nút "Back"
+                        GAME_HIGHTCORE_SCREEN.blit(
+                            GAME_BACK_BUTTON,
+                            (GAME_EXIT_BUTTON_X, GAME_EXIT_BUTTON_Y + 50),
+                        )
+
+                        pygame.display.update()
+
                 elif pygame.Rect(
                     GAME_EXIT_BUTTON_X,
                     GAME_EXIT_BUTTON_Y + 50,
@@ -538,3 +571,169 @@ def game_loop():
 
     if game_over:
         game_stop_loop(player)
+
+
+# def draw_ranking_table(screen):
+#     conn = mysql.connector.connect(
+#         host="localhost",
+#         user="root",
+#         password="",  # Thay bằng mật khẩu MySQL của bạn
+#         database="solar_system_protection",
+#     )
+#     cursor = conn.cursor()
+#     # Vẽ nền mờ cho bảng xếp hạng
+#     ranking_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+#     # Tiêu đề cho các cột
+#     columns = ["STT", "Tài khoản", "Điểm số"]
+
+#     font = pygame.font.Font(None, 16)  # Font chữ
+#     text_color = (255, 255, 255)  # Màu chữ trắng
+
+#     # Tính toán vị trí y của tiêu đề
+#     title_y = 50
+
+#     # Tính toán số lượng cột và kích thước của mỗi cột
+#     num_columns = len(columns)
+#     column_width = SCREEN_WIDTH // num_columns
+
+#     # Tính toán vị trí x của mỗi cột
+#     column_x_positions = [i * column_width for i in range(num_columns)]
+
+#     # Vẽ tiêu đề
+#     for i, col in enumerate(columns):
+#         text = font.render(col, True, text_color)
+#         # Tính toán vị trí x cho từng cột để căn giữa tiêu đề
+#         x = column_x_positions[i] + (column_width - text.get_width()) // 2
+#         ranking_surface.blit(text, (x, title_y))  # Đặt vị trí của tiêu đề
+
+#     # Lấy dữ liệu từ cơ sở dữ liệu và vẽ lên bảng xếp hạng
+#     cursor.execute(
+#         "SELECT username, highest_score FROM users ORDER BY highest_score DESC LIMIT 10"
+#     )
+#     top_10_users = cursor.fetchall()
+
+#     # ranking_data = cursor.fetchall()
+
+#     # Tính toán vị trí y của hàng đầu tiên
+#     data_y = title_y + 20
+
+#     # Vẽ dữ liệu lên bảng xếp hạng
+#     for i, row_data in enumerate(top_10_users):
+#         # Vẽ số thứ tự
+#         stt_text = font.render(str(i + 1), True, text_color)
+#         # Tính toán vị trí x cho số thứ tự sao cho nó ở giữa cột "STT"
+#         stt_x = column_x_positions[0] + (column_width - stt_text.get_width()) // 2
+#         ranking_surface.blit(stt_text, (stt_x, data_y))  # Đặt vị trí của số thứ tự
+
+#         # Tính toán vị trí x cho từng cột dữ liệu
+#         for j, col_data in enumerate(row_data):
+#             text = font.render(str(col_data), True, text_color)
+#             # Tính toán vị trí x cho từng cột để căn giữa dữ liệu
+#             x = column_x_positions[j + 1] + (column_width - text.get_width()) // 2
+#             ranking_surface.blit(text, (x, data_y))  # Đặt vị trí của dữ liệu
+#         data_y += 20  # Di chuyển xuống hàng tiếp theo
+
+#     # Hiển thị bảng xếp hạng lên màn hình
+#     screen.blit(ranking_surface, (0, 0))
+
+
+def draw_ranking_table(screen, current_username):
+    conn = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="",  # Thay bằng mật khẩu MySQL của bạn
+        database="solar_system_protection",
+    )
+    cursor = conn.cursor()
+
+    # Vẽ nền mờ cho bảng xếp hạng
+    ranking_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+    # Tiêu đề cho các cột
+    columns = ["Top", "Username", "Score"]
+
+    font = pygame.font.Font(None, 20)  # Font chữ
+    text_color = (255, 255, 255)  # Màu chữ trắng
+
+    # Tính toán vị trí y của tiêu đề
+    title_y = 50
+
+    # Tính toán số lượng cột và kích thước của mỗi cột
+    num_columns = len(columns)
+    column_width = SCREEN_WIDTH // num_columns
+
+    # Tính toán vị trí x của mỗi cột
+    column_x_positions = [i * column_width for i in range(num_columns)]
+
+    # Vẽ tiêu đề
+    for i, col in enumerate(columns):
+        text = font.render(col, True, text_color)
+        # Tính toán vị trí x cho từng cột để căn giữa tiêu đề
+        x = column_x_positions[i] + (column_width - text.get_width()) // 2
+        ranking_surface.blit(text, (x, title_y))  # Đặt vị trí của tiêu đề
+
+    # Lấy dữ liệu từ cơ sở dữ liệu và vẽ lên bảng xếp hạng
+    cursor.execute(
+        "SELECT username, highest_score FROM users ORDER BY highest_score DESC LIMIT 10"
+    )
+    top_10_users = cursor.fetchall()
+
+    # Tính điểm của người chơi hiện tại
+    cursor.execute(
+        "SELECT highest_score FROM users WHERE username = %s", (current_username,)
+    )
+    current_user_score = cursor.fetchone()[0]
+
+    cursor.execute(
+        "SELECT COUNT(*) FROM users WHERE highest_score > %s", (current_user_score,)
+    )
+    higher_score_count = cursor.fetchone()[0]
+
+    # ranking_data = cursor.fetchall()
+
+    # Tính toán vị trí y của hàng đầu tiên
+    data_y = title_y + 20
+
+    # Vẽ dữ liệu lên bảng xếp hạng
+    for i, (username, highest_score) in enumerate(top_10_users):
+        # Vẽ số thứ tự
+        stt_text = font.render(str(i + 1), True, text_color)
+        # Tính toán vị trí x cho số thứ tự sao cho nó ở giữa cột "STT"
+        stt_x = column_x_positions[0] + (column_width - stt_text.get_width()) // 2
+        ranking_surface.blit(stt_text, (stt_x, data_y))  # Đặt vị trí của số thứ tự
+
+        # Tính toán vị trí x cho tên người chơi
+        username_text = font.render(username, True, text_color)
+        username_x = (
+            column_x_positions[1] + (column_width - username_text.get_width()) // 2
+        )
+        ranking_surface.blit(
+            username_text, (username_x, data_y)
+        )  # Đặt vị trí của tên người chơi
+
+        # Tính toán vị trí x cho điểm số
+        score_text = font.render(str(highest_score), True, text_color)
+        score_x = column_x_positions[2] + (column_width - score_text.get_width()) // 2
+        ranking_surface.blit(score_text, (score_x, data_y))  # Đặt vị trí của điểm số
+
+        data_y += 20  # Di chuyển xuống hàng tiếp theo
+
+    text_color1 = (255, 0, 0)
+    stt_text = font.render(str(higher_score_count + 1), True, text_color1)
+    # Tính toán vị trí x cho số thứ tự sao cho nó ở giữa cột "STT"
+    stt_x = column_x_positions[0] + (column_width - stt_text.get_width()) // 2
+    ranking_surface.blit(stt_text, (stt_x, data_y))  # Đặt vị trí của số thứ tự
+
+    # Tính toán vị trí x cho tên người chơi
+    username_text = font.render("Your Score", True, text_color1)
+    username_x = column_x_positions[1] + (column_width - username_text.get_width()) // 2
+    ranking_surface.blit(
+        username_text, (username_x, data_y)
+    )  # Đặt vị trí của tên người chơi
+
+    # Tính toán vị trí x cho điểm số
+    score_text = font.render(str(current_user_score), True, text_color1)
+    score_x = column_x_positions[2] + (column_width - score_text.get_width()) // 2
+    ranking_surface.blit(score_text, (score_x, data_y))  # Đặt vị trí của điểm số
+    screen.blit(ranking_surface, (0, 0))
