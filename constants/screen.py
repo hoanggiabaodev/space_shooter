@@ -45,7 +45,7 @@ GAME_PAUSE_SCREEN_BACKGROUND = pygame.transform.scale(
 
 GAME_HIGHTCORE_SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 GAME_HIGHTCORE_SCREEN_BACKGROUND = pygame.transform.scale(
-    pygame.image.load("resources/images/Game_Start_Background.png"),
+    pygame.image.load("resources/images/Game_Loop_Background.png"),
     (SCREEN_WIDTH, SCREEN_HEIGHT),
 )
 
@@ -173,6 +173,10 @@ START_IMAGE_HEIGHT = 400
 START_IMAGE = pygame.transform.scale(
     pygame.image.load("resources/images/Start_Image.png"),
     (START_IMAGE_WIDTH, START_IMAGE_HEIGHT),
+)
+HIGHTCORE_IMAGE = pygame.transform.scale(
+    pygame.image.load("resources/images/Start_Image.png"),
+    (START_IMAGE_WIDTH // 1.5, START_IMAGE_HEIGHT // 1.5),
 )
 START_IMAGE_X = 10
 START_IMAGE_Y = 10

@@ -6,6 +6,7 @@ from constants.screen import (
     GAME_HIGHTCORE_SCREEN,
     GAME_HIGHTCORE_SCREEN_BACKGROUND,
     GAME_RANKING_BUTTON,
+    HIGHTCORE_IMAGE,
     SCREEN_HEIGHT,
     GAME_LOOP_SCREEN,
     GAME_LOOP_SCREEN_BACKGROUND,
@@ -649,15 +650,16 @@ def draw_ranking_table(screen, current_username):
 
     # Vẽ nền mờ cho bảng xếp hạng
     ranking_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-
+    ranking_surface.blit(GAME_HIGHTCORE_SCREEN_BACKGROUND, (0, 0))
+    image_x = (SCREEN_WIDTH - HIGHTCORE_IMAGE.get_width()) // 2
+    ranking_surface.blit(HIGHTCORE_IMAGE, (image_x, START_IMAGE_Y * 2))
     # Tiêu đề cho các cột
     columns = ["Top", "Username", "Score"]
 
     font = pygame.font.Font(None, 20)  # Font chữ
     text_color = (255, 255, 255)  # Màu chữ trắng
-
     # Tính toán vị trí y của tiêu đề
-    title_y = 50
+    title_y = 300
 
     # Tính toán số lượng cột và kích thước của mỗi cột
     num_columns = len(columns)
